@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Pengurus ITC',
       theme: ThemeData(
-        primaryColor: Color(0xFF1A237E),
+        primarySwatch: Colors.indigo,
         scaffoldBackgroundColor: Color(0xFFF1F4F9),
       ),
       home: HomePage(),
@@ -23,13 +23,14 @@ class MyApp extends StatelessWidget {
 }
 
 // ================= DATA =================
-List data = [
+List<Map<String, String>> data = [
   {
     "name": "Andi",
     "role": "Ketua",
     "division": "ITC",
     "phone": "08123456789",
     "email": "andi@gmail.com",
+    "desc": "Memimpin organisasi, mengambil keputusan, dan mengawasi seluruh divisi.",
   },
   {
     "name": "Budi",
@@ -37,6 +38,7 @@ List data = [
     "division": "ITC",
     "phone": "08987654321",
     "email": "budi@gmail.com",
+    "desc": "Membantu ketua dalam koordinasi dan menggantikan peran saat diperlukan.",
   },
   {
     "name": "Citra",
@@ -44,6 +46,7 @@ List data = [
     "division": "Mobile Dev",
     "phone": "08111111111",
     "email": "citra@gmail.com",
+    "desc": "Mengelola tim mobile developer dan mengembangkan aplikasi berbasis mobile.",
   },
   {
     "name": "Reza",
@@ -51,6 +54,7 @@ List data = [
     "division": "Web Dev",
     "phone": "082323232323",
     "email": "reza@gmail.com",
+    "desc": "Mengelola pengembangan website dan memastikan kualitas sistem web.",
   },
   {
     "name": "Febi",
@@ -58,13 +62,15 @@ List data = [
     "division": "Web Dev",
     "phone": "082321627489",
     "email": "febi@gmail.com",
+    "desc": "Membantu pengembangan website dan mengerjakan tugas teknis dari divisi.",
   },
-  {
+   {
     "name": "Indra",
     "role": "Anggota Mobile",
     "division": "Mobile Dev",
-    "phone": "082322437489",
+    "phone": "082323127489",
     "email": "indra@gmail.com",
+    "desc": "Membantu pengembangan mobile app dan mengerjakan tugas teknis dari divisi.",
   },
 ];
 
@@ -78,7 +84,7 @@ class HomePage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // HEADER GRADIENT
+            // HEADER
             Container(
               width: double.infinity,
               padding: EdgeInsets.all(20),
@@ -96,7 +102,6 @@ class HomePage extends StatelessWidget {
                 children: [
                   Text("ITC Organization",
                       style: TextStyle(color: Colors.white70)),
-                  SizedBox(height: 5),
                   Text("Pengurus ITC",
                       style: TextStyle(
                           color: Colors.white,
@@ -116,14 +121,13 @@ class HomePage extends StatelessWidget {
                 children: [
                   Text(
                     "ITC adalah organisasi teknologi yang berfokus pada pengembangan skill mahasiswa di bidang IT.",
-                    style: TextStyle(fontSize: 14, color: Colors.black87),
                   ),
-                  SizedBox(height: 12),
+                  SizedBox(height: 10),
                   Container(
-                    padding: EdgeInsets.all(14),
+                    padding: EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: Colors.indigo,
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -133,8 +137,7 @@ class HomePage extends StatelessWidget {
                         Text("${data.length}",
                             style: TextStyle(
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18)),
+                                fontWeight: FontWeight.bold)),
                       ],
                     ),
                   ),
@@ -144,57 +147,31 @@ class HomePage extends StatelessWidget {
 
             SizedBox(height: 20),
 
-            // KETUA H
+            // KETUA
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Container(
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(color: Colors.black12, blurRadius: 8)
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.indigo,
-                      child: Text(ketua["name"][0],
-                          style: TextStyle(color: Colors.white)),
-                    ),
-                    SizedBox(width: 15),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(ketua["name"],
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold)),
-                        Text(ketua["role"],
-                            style: TextStyle(color: Colors.grey)),
-                      ],
-                    )
-                  ],
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.indigo,
+                    child: Text(ketua["name"]![0]),
+                  ),
+                  title: Text(ketua["name"]!),
+                  subtitle: Text(ketua["role"]!),
                 ),
               ),
             ),
 
-            SizedBox(height: 30),
+            Spacer(),
 
-            // BUTTON
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.all(16),
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.all(16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                  ),
-                  child: Text("Lihat Semua Pengurus"),
+                  child: Text("Lihat Semua"),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -223,7 +200,9 @@ class _ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
     var filtered = data
-        .where((p) => p["name"].toLowerCase().contains(search.toLowerCase()))
+        .where((p) => p["name"]!
+            .toLowerCase()
+            .contains(search.toLowerCase()))
         .toList();
 
     return Scaffold(
@@ -236,9 +215,7 @@ class _ListPageState extends State<ListPage> {
               decoration: InputDecoration(
                 hintText: "Cari nama...",
                 prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                border: OutlineInputBorder(),
               ),
               onChanged: (val) {
                 setState(() {
@@ -247,7 +224,6 @@ class _ListPageState extends State<ListPage> {
               },
             ),
           ),
-
           Expanded(
             child: ListView.builder(
               itemCount: filtered.length,
@@ -255,44 +231,34 @@ class _ListPageState extends State<ListPage> {
                 var p = filtered[index];
                 bool fav = favorites.contains(p["name"]);
 
-                return Container(
-                  margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(color: Colors.black12, blurRadius: 6)
-                    ],
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.indigo,
+                    child: Text(p["name"]![0]),
                   ),
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.indigo,
-                      child: Text(p["name"][0]),
+                  title: Text(p["name"]!),
+                  subtitle: Text(p["role"]!),
+                  trailing: IconButton(
+                    icon: Icon(
+                      fav ? Icons.star : Icons.star_border,
+                      color: fav ? Colors.amber : Colors.grey,
                     ),
-                    title: Text(p["name"]),
-                    subtitle: Text(p["role"]),
-                    trailing: IconButton(
-                      icon: Icon(
-                        fav ? Icons.star : Icons.star_border,
-                        color: fav ? Colors.amber : Colors.grey,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          fav
-                              ? favorites.remove(p["name"])
-                              : favorites.add(p["name"]);
-                        });
-                      },
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => DetailPage(person: p),
-                        ),
-                      ).then((_) => setState(() {}));
+                    onPressed: () {
+                      setState(() {
+                        fav
+                            ? favorites.remove(p["name"])
+                            : favorites.add(p["name"]!);
+                      });
                     },
                   ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => DetailPage(person: p),
+                      ),
+                    ).then((_) => setState(() {}));
+                  },
                 );
               },
             ),
@@ -305,7 +271,7 @@ class _ListPageState extends State<ListPage> {
 
 // ================= DETAIL PAGE =================
 class DetailPage extends StatefulWidget {
-  final Map person;
+  final Map<String, String> person;
 
   DetailPage({required this.person});
 
@@ -321,7 +287,7 @@ class _DetailPageState extends State<DetailPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(p["name"]),
+        title: Text(p["name"]!),
         actions: [
           IconButton(
             icon: Icon(fav ? Icons.star : Icons.star_border),
@@ -329,7 +295,7 @@ class _DetailPageState extends State<DetailPage> {
               setState(() {
                 fav
                     ? favorites.remove(p["name"])
-                    : favorites.add(p["name"]);
+                    : favorites.add(p["name"]!);
               });
             },
           )
@@ -338,40 +304,36 @@ class _DetailPageState extends State<DetailPage> {
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CircleAvatar(
-              radius: 45,
-              backgroundColor: Colors.indigo,
-              child: Text(p["name"][0],
-                  style: TextStyle(fontSize: 28, color: Colors.white)),
+            Center(
+              child: CircleAvatar(
+                radius: 40,
+                backgroundColor: Colors.indigo,
+                child: Text(p["name"]![0],
+                    style: TextStyle(fontSize: 24, color: Colors.white)),
+              ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 16),
 
-            Text(p["name"],
+            Text(p["name"]!,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            Text(p["role"], style: TextStyle(color: Colors.grey)),
+            Text(p["role"]!),
 
             SizedBox(height: 20),
 
-            Container(
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(color: Colors.black12, blurRadius: 6)
-                ],
-              ),
-              child: Column(
-                children: [
-                  Row(children: [Icon(Icons.business), SizedBox(width: 10), Text(p["division"])]),
-                  SizedBox(height: 10),
-                  Row(children: [Icon(Icons.phone), SizedBox(width: 10), Text(p["phone"])]),
-                  SizedBox(height: 10),
-                  Row(children: [Icon(Icons.email), SizedBox(width: 10), Text(p["email"])]),
-                ],
-              ),
-            )
+            Text("Deskripsi Pekerjaan",
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            SizedBox(height: 6),
+            Text(p["desc"]!),
+
+            SizedBox(height: 20),
+
+            Text("Kontak",
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            SizedBox(height: 6),
+            Text("📞 ${p["phone"]}"),
+            Text("📧 ${p["email"]}"),
           ],
         ),
       ),
