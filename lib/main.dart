@@ -4,13 +4,19 @@ void main() {
   runApp(MyApp());
 }
 
-// ================= APP =================
+// ================= GLOBAL FAVORITE =================
+Set<String> favorites = {};
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Pengurus ITC',
+      theme: ThemeData(
+        primaryColor: Color(0xFF1A237E),
+        scaffoldBackgroundColor: Color(0xFFF1F4F9),
+      ),
       home: HomePage(),
     );
   }
@@ -38,20 +44,27 @@ List data = [
     "division": "Mobile Dev",
     "phone": "08111111111",
     "email": "citra@gmail.com",
-  }, 
+  },
   {
     "name": "Reza",
-    "role": "Kadiv web",
-    "division": "web Dev",
+    "role": "Kadiv Web",
+    "division": "Web Dev",
     "phone": "082323232323",
     "email": "reza@gmail.com",
   },
   {
     "name": "Febi",
-    "role": "Anggota web",
-    "division": "web Dev",
+    "role": "Anggota Web",
+    "division": "Web Dev",
     "phone": "082321627489",
     "email": "febi@gmail.com",
+  },
+  {
+    "name": "Indra",
+    "role": "Anggota Mobile",
+    "division": "Mobile Dev",
+    "phone": "082322437489",
+    "email": "indra@gmail.com",
   },
 ];
 
@@ -61,54 +74,135 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     var ketua = data.firstWhere((p) => p["role"] == "Ketua");
 
-    // Hitung jumlah divisi unik
-    var divisions = data.map((p) => p["division"]).toSet();
-
     return Scaffold(
-      appBar: AppBar(title: Text("Pengurus ITC")),
-      body: Padding(
-        padding: EdgeInsets.all(16),
+      body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //  DESKRIPSI ITC
-            Text(
-              "ITC adalah organisasi yang bergerak di bidang teknologi, "
-              "berfokus pada pengembangan skill mahasiswa dalam dunia IT.",
-              style: TextStyle(fontSize: 16),
-            ),
-
-            SizedBox(height: 20),
-
-            //  JUMLAH DIVISI
-            Text(
-              "Jumlah Divisi: ${divisions.length}",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-      
-            SizedBox(height: 20),
-
-            //  HIGHLIGHT KETUA
-            Text("Ketua", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-            ListTile(
-              leading: CircleAvatar(
-                child: Text(ketua["name"][0]),
+            // HEADER GRADIENT
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF1A237E), Color(0xFF3949AB)],
+                ),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
+                ),
               ),
-              title: Text(ketua["name"]),
-              subtitle: Text(ketua["role"]),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("ITC Organization",
+                      style: TextStyle(color: Colors.white70)),
+                  SizedBox(height: 5),
+                  Text("Pengurus ITC",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold)),
+                ],
+              ),
             ),
 
             SizedBox(height: 20),
 
-            // 🔥 BUTTON KE HALAMAN LIST
-            ElevatedButton(
-              child: Text("Lihat Struktur"),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => ListPage()),
-                );
-              },
+            // DESKRIPSI + JUMLAH
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "ITC adalah organisasi teknologi yang berfokus pada pengembangan skill mahasiswa di bidang IT.",
+                    style: TextStyle(fontSize: 14, color: Colors.black87),
+                  ),
+                  SizedBox(height: 12),
+                  Container(
+                    padding: EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: Colors.indigo,
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Jumlah Pengurus",
+                            style: TextStyle(color: Colors.white)),
+                        Text("${data.length}",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            SizedBox(height: 20),
+
+            // KETUA H
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Container(
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(color: Colors.black12, blurRadius: 8)
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.indigo,
+                      child: Text(ketua["name"][0],
+                          style: TextStyle(color: Colors.white)),
+                    ),
+                    SizedBox(width: 15),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(ketua["name"],
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
+                        Text(ketua["role"],
+                            style: TextStyle(color: Colors.grey)),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+
+            SizedBox(height: 30),
+
+            // BUTTON
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.all(16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                  child: Text("Lihat Semua Pengurus"),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => ListPage()),
+                    );
+                  },
+                ),
+              ),
             )
           ],
         ),
@@ -118,55 +212,93 @@ class HomePage extends StatelessWidget {
 }
 
 // ================= LIST PAGE =================
-class ListPage extends StatelessWidget {
+class ListPage extends StatefulWidget {
+  @override
+  _ListPageState createState() => _ListPageState();
+}
+
+class _ListPageState extends State<ListPage> {
+  String search = "";
+
   @override
   Widget build(BuildContext context) {
-    var ketua = data.where((p) => p["role"] == "Ketua").toList();
-    var wakil = data.where((p) => p["role"] == "Wakil").toList();
-    var kadiv = data.where((p) => p["role"].toString().contains("Kadiv")).toList();
-    var anggota = data.where((p) => p["role"].toString().contains("Anggota")).toList();
+    var filtered = data
+        .where((p) => p["name"].toLowerCase().contains(search.toLowerCase()))
+        .toList();
 
     return Scaffold(
-      appBar: AppBar(title: Text("Struktur Pengurus")),
-      body: ListView(
+      appBar: AppBar(title: Text("Pengurus")),
+      body: Column(
         children: [
-          buildSection("Ketua", ketua, context, Colors.green),
-          buildSection("Wakil", wakil, context, Colors.blue),
-          buildSection("Kepala Divisi", kadiv, context, Colors.orange),
-          buildSection("Anggota Divisi", anggota, context, Colors.purple),
-        ],
-      ),
-    );
-  }
-
-  Widget buildSection(String title, List list, BuildContext context, Color color) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.all(12),
-          child: Text(
-            title,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-        ),
-        ...list.map((p) => ListTile(
-              leading: CircleAvatar(
-                backgroundColor: color,
-                child: Text(p["name"][0]),
+          Padding(
+            padding: EdgeInsets.all(12),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: "Cari nama...",
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
-              title: Text(p["name"]),
-              subtitle: Text(p["role"]),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => DetailPage(person: p),
+              onChanged: (val) {
+                setState(() {
+                  search = val;
+                });
+              },
+            ),
+          ),
+
+          Expanded(
+            child: ListView.builder(
+              itemCount: filtered.length,
+              itemBuilder: (context, index) {
+                var p = filtered[index];
+                bool fav = favorites.contains(p["name"]);
+
+                return Container(
+                  margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(color: Colors.black12, blurRadius: 6)
+                    ],
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.indigo,
+                      child: Text(p["name"][0]),
+                    ),
+                    title: Text(p["name"]),
+                    subtitle: Text(p["role"]),
+                    trailing: IconButton(
+                      icon: Icon(
+                        fav ? Icons.star : Icons.star_border,
+                        color: fav ? Colors.amber : Colors.grey,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          fav
+                              ? favorites.remove(p["name"])
+                              : favorites.add(p["name"]);
+                        });
+                      },
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => DetailPage(person: p),
+                        ),
+                      ).then((_) => setState(() {}));
+                    },
                   ),
                 );
               },
-            ))
-      ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }
@@ -182,50 +314,64 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
-  bool isFavorite = false;
-
   @override
   Widget build(BuildContext context) {
     var p = widget.person;
+    bool fav = favorites.contains(p["name"]);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(p["name"]),
         actions: [
           IconButton(
-            icon: Icon(isFavorite ? Icons.star : Icons.star_border),
+            icon: Icon(fav ? Icons.star : Icons.star_border),
             onPressed: () {
               setState(() {
-                isFavorite = !isFavorite;
+                fav
+                    ? favorites.remove(p["name"])
+                    : favorites.add(p["name"]);
               });
             },
           )
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: CircleAvatar(
-                radius: 40,
-                child: Text(p["name"][0], style: TextStyle(fontSize: 24)),
-              ),
+            CircleAvatar(
+              radius: 45,
+              backgroundColor: Colors.indigo,
+              child: Text(p["name"][0],
+                  style: TextStyle(fontSize: 28, color: Colors.white)),
             ),
-            SizedBox(height: 20),
-
-            Text("Nama: ${p["name"]}", style: TextStyle(fontSize: 18)),
-            Text("Jabatan: ${p["role"]}"),
-            Text("Divisi: ${p["division"]}"),
-
-            SizedBox(height: 20),
-
-            Text("Kontak Cepat", style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
 
-            Text("📞 ${p["phone"]}"),
-            Text("📧 ${p["email"]}"),
+            Text(p["name"],
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Text(p["role"], style: TextStyle(color: Colors.grey)),
+
+            SizedBox(height: 20),
+
+            Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(color: Colors.black12, blurRadius: 6)
+                ],
+              ),
+              child: Column(
+                children: [
+                  Row(children: [Icon(Icons.business), SizedBox(width: 10), Text(p["division"])]),
+                  SizedBox(height: 10),
+                  Row(children: [Icon(Icons.phone), SizedBox(width: 10), Text(p["phone"])]),
+                  SizedBox(height: 10),
+                  Row(children: [Icon(Icons.email), SizedBox(width: 10), Text(p["email"])]),
+                ],
+              ),
+            )
           ],
         ),
       ),
